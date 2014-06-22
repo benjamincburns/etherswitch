@@ -1,10 +1,10 @@
 {
     "name" : "etherswitch",
     "version" : "0.0.1",
-    "description" : "A virtual ethernet switch written in pure JavaScript",
+    "description" : "A very simple virtual ethernet switch written in pure JavaScript",
     "author" : "Ben Burns <benjamin.c.burns@gmail.com>",
     "keywords" : [
-        "ethswitch",
+        "etherswitch",
         "network",
         "networking",
         "ethernet",
