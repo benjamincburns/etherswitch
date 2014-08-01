@@ -2,36 +2,51 @@
 
 A virtual ethernet switch written in pure JavaScript.
 
-Normal use:
+This library provides two classes, `Switch`, and `Port`.
+
+`Switch` has no public methods. It's just used to connect `Port`s together.
+
+`Ports` have the methods `send` and `close`, which each do exactly what you'd
+expect.
+
+`Port.send` accepts one argument, a `Buffer` containing an Ethernet frame.
+
+`Port.close` removes the instance of `Port` from the switch.
+
+`Port` also emits the event `frame`. The `frame` event handler is also passed
+a single argument - the frame to be received by the consumer of that `Port`.
+
 
 ```js
+
 var Switch = require('etherswitch')
 
+
 var vswitch = new Switch();
-var port1 = vswitch.OpenPort();
-var port2 = vswitch.OpenPort();
 
-port1.onframe = function(frame) {
-    ethernet1.Recv(frame);
-}
+var port1 = new Port(vswitch);
+var port2 = new Port(vswitch);
 
-port2.onframe = function(frame) {
-    ethernet2.Recv(frame);
-}
+ethernet1 = new SomeProviderOfEthernetFrames();
+ethernet2 = new SomeProviderOfEthernetFrames();
 
-ethernet1.onframe(function(frame) {
-    port1.Send(frame);
+port1.on('frame', function(frame) {
+    ethernet1.recv('frame');
 });
 
-ethernet2.onframe(function(frame) {
-    port2.Send(frame);
+port2.on('frame', function(frame) {
+    ethernet2.recv('frame');
 });
 
-ethernet1.onclose(function() {
-    port1.Close();
+ethernet1.on('frame', function(frame) {
+    port1.send(frame);
 });
 
-ethernet2.onclose(function() {
-    port2.Close;
+ethernet2.on('frame', function(frame) {
+    port2.send(frame);
 });
+
+ethernet1.on('close', port1.close);
+
+ethernet2.on('close', port2.close);
 ```
