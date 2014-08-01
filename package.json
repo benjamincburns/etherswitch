@@ -14,5 +14,6 @@
     "license" : "MIT",
     "engines": {
         "node" : ">= 0.10.0"
-    }
+    },
+    "main" : "./lib/etherswitch.js"
 }
